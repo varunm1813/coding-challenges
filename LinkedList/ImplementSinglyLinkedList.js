@@ -1,78 +1,104 @@
-class Node {
-  constructor(value) {
-    this.value = value;
-    this.next = null;
-  }
-}
+// add a method reverse() to the linked list that reverses the entire list of nodes
+
 class LinkedList {
   constructor(value) {
-    this.head = new Node(value);
+    this.head = {
+      value: value,
+      next: null
+    };
     this.tail = this.head;
     this.length = 1;
   }
-
-  printList() {
-    let currentNode = this.head;
-    let arr = [];
-    while (currentNode) {
-      arr.push(currentNode.value);
-      currentNode = currentNode.next;
-    }
-    return arr;
-  }
-
   append(value) {
-    let newNode = new Node(value);
+    const newNode = {
+      value: value,
+      next: null
+    };
+    console.log(newNode);
     this.tail.next = newNode;
     this.tail = newNode;
     this.length++;
+    return this;
   }
-
   prepend(value) {
-    let newNode = new Node(value);
+    const newNode = {
+      value: value,
+      next: null
+    };
     newNode.next = this.head;
     this.head = newNode;
     this.length++;
+    return this;
   }
-
-  traverse(n) {
+  printList() {
+    const array = [];
     let currentNode = this.head;
-    for (let i = 0; i < n; i++) {
+    while (currentNode !== null) {
+      array.push(currentNode.value);
       currentNode = currentNode.next;
+    }
+    return array;
+  }
+  insert(index, value) {
+    //Check for proper parameters;
+    if (index >= this.length) {
+      console.log("yes");
+      return this.append(value);
+    }
+
+    const newNode = {
+      value: value,
+      next: null
+    };
+    const leader = this.traverseToIndex(index - 1);
+    const holdingPointer = leader.next;
+    leader.next = newNode;
+    newNode.next = holdingPointer;
+    this.length++;
+    return this.printList();
+  }
+  traverseToIndex(index) {
+    //Check parameters
+    let counter = 0;
+    let currentNode = this.head;
+    while (counter !== index) {
+      currentNode = currentNode.next;
+      counter++;
     }
     return currentNode;
   }
-
-  insert(index, value) {
-    if (index === 0) {
-      this.prepend(value);
-    } else {
-      let newNode = new Node(value);
-      let prevNode = this.head;
-      prevNode = this.traverse(index - 1);
-      newNode.next = prevNode.next;
-      prevNode.next = newNode;
-      this.length++;
-    }
-  }
-
   remove(index) {
-    if (index === 0) {
-      this.head = this.head.next;
-      return;
+    // Check Parameters
+    const leader = this.traverseToIndex(index - 1);
+    const unwantedNode = leader.next;
+    leader.next = unwantedNode.next;
+    this.length--;
+    return this.printList();
+  }
+  reverse() {
+    let cur = this.head;
+    let pre = this.head;
+    this.tail = this.head;
+    cur = cur.next;
+    while (cur != null) {
+      let temp2 = cur.next;
+      cur.next = pre;
+      pre = cur;
+      cur = temp2;
     }
-    let prevNode = this.traverse(index - 1);
-    if (index === this.length - 1) {
-      prevNode.next = null;
-      return;
-    }
-    prevNode.next = prevNode.next.next;
+    this.head.next = null;
+    this.head = pre;
+    return this.printList();
   }
 }
 
-let myList = new LinkedList(5);
-myList.append(10);
-myList.prepend(43);
-myList.insert(1, 67);
-myList.remove(1);
-myList.printList();
+let myLinkedList = new LinkedList(10);
+myLinkedList.append(5);
+myLinkedList.append(16);
+myLinkedList.prepend(1);
+myLinkedList.printList();
+myLinkedList.insert(2, 99);
+myLinkedList.insert(20, 88);
+myLinkedList.printList();
+myLinkedList.remove(2);
+myLinkedList.reverse();
